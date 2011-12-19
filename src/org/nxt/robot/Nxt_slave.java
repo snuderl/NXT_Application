@@ -6,6 +6,7 @@ import java.io.IOException;
 import lejos.nxt.Sound;
 import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
+import lejos.nxt.comm.NXTConnection;
 
 /**
  * 
@@ -34,7 +35,7 @@ public class Nxt_slave {
 		BTConnection connection;
 		boolean loop = true;
 		System.out.println("Waiting for connection...");
-		connection = Bluetooth.waitForConnection();
+		connection = Bluetooth.waitForConnection(0, NXTConnection.RAW);
 
 		dataIn = connection.openDataInputStream();
 		dataOut = connection.openDataOutputStream();
@@ -47,11 +48,17 @@ public class Nxt_slave {
 				send(-recived);
 				if (recived == 111) {
 					loop=false;
+
+					System.out.println("Exiting");
+					Sound.beep();
+					Thread.sleep(5000);
+
 				}
 			} catch (Exception e) {
 				System.out.println("Error in recieve.");
 			}
 		}
+		
 
 	}
 
