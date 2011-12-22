@@ -7,6 +7,7 @@ import lejos.nxt.Sound;
 import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
+import lejos.nxt.remote.NXTCommand;
 
 /**
  * 
