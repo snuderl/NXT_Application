@@ -5,6 +5,8 @@ package org.nxt.robot;
  * 
  */
 public interface NXT_Commands {
+//Forward 1 paramter
+//Arc in steer 2
 	public final int FORWARD = 0;
 	public final int BACKWARD = 1;
 	public final int STOP = 2;
