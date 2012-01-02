@@ -7,7 +7,9 @@ import lejos.nxt.Sound;
 import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
-import lejos.nxt.remote.NXTCommand;
+import lejos.robotics.RegulatedMotor;
+import lejos.robotics.navigation.DifferentialPilot;
+import lejos.util.PilotProps;
 
 /**
  * 
@@ -17,18 +19,33 @@ import lejos.nxt.remote.NXTCommand;
  * @author Blaž Šnuderl
  * 
  */
-public class Nxt_slave {
+public class Nxt_slave implements NXT_Commands {
+
 
 	protected DataInputStream dataIn;
 	protected DataOutputStream dataOut;
 
-	int recived = 0;
+	int _command = 0;
+	protected float _param1;
+	protected float _param2;
+	protected boolean _immediate;
+	protected static DifferentialPilot pilot;
 
 	/**
 	 * @param args
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
+		PilotProps pp = new PilotProps();
+    	pp.loadPersistentValues();
+    	float wheelDiameter = Float.parseFloat(pp.getProperty(PilotProps.KEY_WHEELDIAMETER, "2.2"));
+    	float trackWidth = Float.parseFloat(pp.getProperty(PilotProps.KEY_TRACKWIDTH, "5.2"));
+    	RegulatedMotor leftMotor = PilotProps.getMotor(pp.getProperty(PilotProps.KEY_LEFTMOTOR, "A"));
+    	RegulatedMotor rightMotor = PilotProps.getMotor(pp.getProperty(PilotProps.KEY_RIGHTMOTOR, "C"));
+    	boolean reverse = Boolean.parseBoolean(pp.getProperty(PilotProps.KEY_REVERSE,"false"));
+
+    	pilot = new DifferentialPilot(wheelDiameter, trackWidth, leftMotor, rightMotor, reverse);
 
 	}
 
@@ -46,14 +63,28 @@ public class Nxt_slave {
 		while (loop) {
 			try {
 				recieve();
-				send(-recived);
-				if (recived == 111) {
+				//send(-_command);
+				if (_command == 111) {
 					loop=false;
-
 					System.out.println("Exiting");
 					Sound.beep();
 					Thread.sleep(5000);
-
+				}
+				else if(_command==FORWARD){
+					pilot.travel(_param1, _immediate);
+				}
+				else if(_command==BACKWARD){
+					pilot.backward();
+				}
+				else if(_command==STOP){
+					pilot.stop();
+				}
+				else if(_command==ARC){
+					pilot.arc(_param1, _param2, _immediate);
+					
+				}
+				else if(_command==STEER){
+					pilot.steer(_param1, _param2, _immediate);
 				}
 			} catch (Exception e) {
 				System.out.println("Error in recieve.");
@@ -68,6 +99,9 @@ public class Nxt_slave {
 	}
 
 	protected void recieve() throws IOException {
-		recived = dataIn.readInt();
+		_command = dataIn.readInt();
+		_param1 = dataIn.readFloat();
+        _param2 = dataIn.readFloat();
+        _immediate = dataIn.readBoolean();
 	}
 }
