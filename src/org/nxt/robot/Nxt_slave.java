@@ -22,14 +22,18 @@ import lejos.util.PilotProps;
 public class Nxt_slave implements NXT_Commands {
 
 
+	public Nxt_slave(DifferentialPilot dPilot) {
+		pilot = dPilot;
+	}
+
 	protected DataInputStream dataIn;
 	protected DataOutputStream dataOut;
 
 	int _command = 0;
 	protected float _param1;
 	protected float _param2;
-	protected boolean _immediate;
-	protected static DifferentialPilot pilot;
+	protected boolean _immediate = true;
+	protected DifferentialPilot pilot;
 
 	/**
 	 * @param args
@@ -44,8 +48,10 @@ public class Nxt_slave implements NXT_Commands {
     	RegulatedMotor leftMotor = PilotProps.getMotor(pp.getProperty(PilotProps.KEY_LEFTMOTOR, "A"));
     	RegulatedMotor rightMotor = PilotProps.getMotor(pp.getProperty(PilotProps.KEY_RIGHTMOTOR, "C"));
     	boolean reverse = Boolean.parseBoolean(pp.getProperty(PilotProps.KEY_REVERSE,"false"));
-
-    	pilot = new DifferentialPilot(wheelDiameter, trackWidth, leftMotor, rightMotor, reverse);
+    	DifferentialPilot dp = new DifferentialPilot(wheelDiameter, trackWidth, leftMotor, rightMotor, reverse);
+    	Nxt_slave pilot = new Nxt_slave(dp);
+    	pilot.connect();
+    	
 
 	}
 
@@ -54,7 +60,6 @@ public class Nxt_slave implements NXT_Commands {
 		boolean loop = true;
 		System.out.println("Waiting for connection...");
 		connection = Bluetooth.waitForConnection(0, NXTConnection.RAW);
-
 		dataIn = connection.openDataInputStream();
 		dataOut = connection.openDataOutputStream();
 		Sound.beep();
@@ -62,36 +67,38 @@ public class Nxt_slave implements NXT_Commands {
 
 		while (loop) {
 			try {
-				recieve();
-				//send(-_command);
-				if (_command == 111) {
-					loop=false;
-					System.out.println("Exiting");
-					Sound.beep();
-					Thread.sleep(5000);
-				}
-				else if(_command==FORWARD){
-					pilot.travel(_param1, _immediate);
-				}
-				else if(_command==BACKWARD){
-					pilot.backward();
-				}
-				else if(_command==STOP){
-					pilot.stop();
-				}
-				else if(_command==ARC){
-					pilot.arc(_param1, _param2, _immediate);
-					
-				}
-				else if(_command==STEER){
-					pilot.steer(_param1, _param2, _immediate);
-				}
-			} catch (Exception e) {
-				System.out.println("Error in recieve.");
+				execute();
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		
 
+	}
+	protected void execute(){
+		try {
+			recieve();
+			if(_command==FORWARD){
+				pilot.travel(_param1, _immediate);
+			}
+			else if(_command==BACKWARD){
+				pilot.backward();
+			}
+			else if(_command==STOP){
+				pilot.stop();
+			}
+			else if(_command==ARC){
+				pilot.arc(_param1, _param2, _immediate);
+				
+			}
+			else if(_command==STEER){
+				pilot.steer(_param1, _param2, _immediate);
+			}
+		} catch (Exception e) {
+			System.out.println("Error in recieve.");
+		}
 	}
 
 	protected void send(int data) throws IOException {
@@ -102,6 +109,6 @@ public class Nxt_slave implements NXT_Commands {
 		_command = dataIn.readInt();
 		_param1 = dataIn.readFloat();
         _param2 = dataIn.readFloat();
-        _immediate = dataIn.readBoolean();
+        //_immediate = dataIn.readBoolean();
 	}
 }
