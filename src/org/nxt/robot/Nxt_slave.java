@@ -81,7 +81,8 @@ public class Nxt_slave implements NXT_Commands {
 		try {
 			recieve();
 			if(_command==FORWARD){
-				pilot.travel(_param1, _immediate);
+				pilot.setTravelSpeed(_param1);
+				pilot.forward();
 			}
 			else if(_command==BACKWARD){
 				pilot.backward();
@@ -107,8 +108,12 @@ public class Nxt_slave implements NXT_Commands {
 
 	protected void recieve() throws IOException {
 		_command = dataIn.readInt();
-		_param1 = dataIn.readFloat();
-        _param2 = dataIn.readFloat();
+		if(_command==FORWARD||_command==STEER||_command==ARC){
+			_param1 = dataIn.readFloat();
+		}
+		if(_command==ARC||_command==STEER){
+			_param2 = dataIn.readFloat();
+        }
         //_immediate = dataIn.readBoolean();
 	}
 }
