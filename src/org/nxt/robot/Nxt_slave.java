@@ -32,7 +32,7 @@ public class Nxt_slave implements NXT_Commands {
 	int _command = 0;
 	protected float _param1;
 	protected float _param2;
-	protected boolean _immediate = true;
+	protected boolean _immediate = false;
 	protected DifferentialPilot pilot;
 
 	/**
@@ -81,8 +81,7 @@ public class Nxt_slave implements NXT_Commands {
 		try {
 			recieve();
 			if(_command==FORWARD){
-				pilot.setTravelSpeed(_param1);
-				pilot.forward();
+				pilot.travel(_param1);
 				System.out.println("C: "+_command);
 				System.out.println("p1: "+_param1);
 			}
@@ -109,6 +108,7 @@ public class Nxt_slave implements NXT_Commands {
 						_param1, _param2, _immediate);
 				System.out.println("C: "+_command);
 				System.out.println("p1: "+_param1);
+				System.out.println("p2: "+_param2);
 			}
 		} catch (Exception e) {
 			System.out.println("Error in recieve.");
