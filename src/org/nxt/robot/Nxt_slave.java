@@ -83,19 +83,32 @@ public class Nxt_slave implements NXT_Commands {
 			if(_command==FORWARD){
 				pilot.setTravelSpeed(_param1);
 				pilot.forward();
+				System.out.println("C: "+_command);
+				System.out.println("p1: "+_param1);
 			}
 			else if(_command==BACKWARD){
+				pilot.setTravelSpeed(_param1);
 				pilot.backward();
+				System.out.println("C: "+_command);
+				System.out.println("p1: "+_param1);
 			}
 			else if(_command==STOP){
 				pilot.stop();
+				System.out.println("C: "+_command);
+
 			}
 			else if(_command==ARC){
 				pilot.arc(_param1, _param2, _immediate);
+				System.out.println("C: "+_command);
+				System.out.println("p1: "+_param1);
+				System.out.println("p2: "+_param2);
 				
 			}
 			else if(_command==STEER){
-				pilot.steer(_param1, _param2, _immediate);
+				pilot.steer(
+						_param1, _param2, _immediate);
+				System.out.println("C: "+_command);
+				System.out.println("p1: "+_param1);
 			}
 		} catch (Exception e) {
 			System.out.println("Error in recieve.");
