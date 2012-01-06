@@ -32,7 +32,7 @@ public class Nxt_slave implements NXT_Commands {
 	int _command = 0;
 	protected float _param1;
 	protected float _param2;
-	protected boolean _immediate = false;
+	protected boolean _immediate = true;
 	protected DifferentialPilot pilot;
 
 	/**
@@ -66,13 +66,7 @@ public class Nxt_slave implements NXT_Commands {
 		System.out.println("Connected");
 
 		while (loop) {
-			try {
 				execute();
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		
 
@@ -120,8 +114,10 @@ public class Nxt_slave implements NXT_Commands {
 	}
 
 	protected void recieve() throws IOException {
+
+		System.out.println("bla");
 		_command = dataIn.readInt();
-		if(_command==FORWARD||_command==STEER||_command==ARC){
+		if(_command==FORWARD||_command==STEER||_command==ARC || _command==BACKWARD){
 			_param1 = dataIn.readFloat();
 		}
 		if(_command==ARC||_command==STEER){
