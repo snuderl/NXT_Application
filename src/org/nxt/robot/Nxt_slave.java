@@ -104,6 +104,11 @@ public class Nxt_slave implements NXT_Commands {
 				System.out.println("p1: "+_param1);
 				System.out.println("p2: "+_param2);
 			}
+			else if(_command==MORSE){
+				String param = dataIn.readUTF();
+				MorsePlayer player = MorsePlayer.getPlayer();
+				player.playMorse(param);
+			}
 		} catch (Exception e) {
 			System.out.println("Error in recieve.");
 		}
