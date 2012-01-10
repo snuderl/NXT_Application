@@ -66,13 +66,7 @@ public class Nxt_slave implements NXT_Commands {
 		System.out.println("Connected");
 
 		while (loop) {
-			try {
-				execute();
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			execute();
 		}
 		
 
