@@ -32,7 +32,7 @@ public class Nxt_slave implements NXT_Commands {
 	int _command = 0;
 	protected float _param1;
 	protected float _param2;
-	protected boolean _immediate = false;
+	protected boolean _immediate = true;
 	protected DifferentialPilot pilot;
 
 	/**
@@ -67,6 +67,7 @@ public class Nxt_slave implements NXT_Commands {
 
 		while (loop) {
 			execute();
+
 		}
 		
 
@@ -104,6 +105,11 @@ public class Nxt_slave implements NXT_Commands {
 				System.out.println("p1: "+_param1);
 				System.out.println("p2: "+_param2);
 			}
+			else if(_command==MORSE){
+				String param = dataIn.readUTF();
+				MorsePlayer player = MorsePlayer.getPlayer();
+				player.playMorse(param);
+			}
 		} catch (Exception e) {
 			System.out.println("Error in recieve.");
 		}
@@ -114,8 +120,10 @@ public class Nxt_slave implements NXT_Commands {
 	}
 
 	protected void recieve() throws IOException {
+
+		System.out.println("bla");
 		_command = dataIn.readInt();
-		if(_command==FORWARD||_command==STEER||_command==ARC){
+		if(_command==FORWARD||_command==STEER||_command==ARC || _command==BACKWARD){
 			_param1 = dataIn.readFloat();
 		}
 		if(_command==ARC||_command==STEER){
