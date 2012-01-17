@@ -13,4 +13,5 @@ public interface NXT_Commands {
 	public final int ARC = 3;
 	public final int STEER = 4;
 	public final int MORSE = 5;
+	public final int CLAWS = 6;
 }
