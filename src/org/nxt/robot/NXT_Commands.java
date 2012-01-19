@@ -5,13 +5,12 @@ package org.nxt.robot;
  * 
  */
 public interface NXT_Commands {
-//Forward 1 paramter
-//Arc in steer 2
-	public final int FORWARD = 0;
-	public final int BACKWARD = 1;
-	public final int STOP = 2;
-	public final int ARC = 3;
-	public final int STEER = 4;
-	public final int MORSE = 5;
-	public final int CLAWS = 6;
+	public final String FORWARD = "FORWARD";
+	public final String BACKWARD = "BACKWARD";
+	public final String STOP = "STOP";
+	public final String ARC = "ARC";
+	public final String STEER = "STEER";
+	public final String MORSE = "MORSE";
+	public final String KEEPALIVE = "KeepAlive";
 }
+
