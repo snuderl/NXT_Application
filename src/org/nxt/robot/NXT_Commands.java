@@ -12,5 +12,6 @@ public interface NXT_Commands {
 	public final String STEER = "STEER";
 	public final String MORSE = "MORSE";
 	public final String KEEPALIVE = "KeepAlive";
+	public final String CLAWS = "CLAWS";
 }
 

@@ -15,13 +15,13 @@ public class Nxt_slave implements NXT_Commands {
 
 	//protected DataInputStream dataIn;
 	//protected DataOutputStream dataOut;
-	protected int _command = -1;
+	protected String _command = "no command";
 	protected float _param1 = 0;
 	protected float _param2 = 0;
 	protected boolean _immediate = true;
 	protected String _morseString = "no input";
 	protected DifferentialPilot pilot;
-	protected int clawAngle = 180;
+	protected int clawAngle = 45;
 
 	/**
 	 * @param args
@@ -92,8 +92,8 @@ public class Nxt_slave implements NXT_Commands {
 			System.out.println("p1: " + _param1);
 			System.out.println("p2: " + _param2);
 		} else if (_command == MORSE) {
-			MorsePlayer player = MorsePlayer.getPlayer();
-			player.playMorse(_morseString);
+			//MorsePlayer player = MorsePlayer.getPlayer();
+			///player.playMorse(_morseString);
 			System.out.println("morse: " + _morseString);
 		}
 		else if (_command == CLAWS){

@@ -11,7 +11,7 @@ public class BluetoothConnection extends Thread implements NXT_Commands {
 	protected Nxt_slave pilot;
 	protected DataInputStream dataIn;
 	protected DataOutputStream dataOut;
-	protected int _command = -1;
+	protected String _command = "no command";
 	protected float _param1 = 0;
 	protected float _param2 = 0;
 	protected String _morseString = "no input";
@@ -42,17 +42,27 @@ public class BluetoothConnection extends Thread implements NXT_Commands {
 	
 	protected void recieve(){
 		try {
-			_command = dataIn.readInt();
-			if (_command == FORWARD || _command == STEER || _command == ARC
-					|| _command == BACKWARD) {
-				_param1 = dataIn.readFloat();
+			String input = dataIn.readUTF();
+			Packet pack = new Packet(input);
+			_command = pack.getCommand();
+			String[] params = pack.getValues();
+			if(params.length>=1){
+				_param1 = Float.parseFloat(params[0]);
+				if(params.length==2){
+					_param2 = Float.parseFloat(params[1]);
+				}
 			}
-			if (_command == STEER || _command == ARC) {
-				_param2 = dataIn.readFloat();
-			}
-			if (_command == MORSE) {
-				_morseString = dataIn.readUTF();
-			}
+//			_command = dataIn.readInt();
+//			if (_command == FORWARD || _command == STEER || _command == ARC
+//					|| _command == BACKWARD) {
+//				_param1 = dataIn.readFloat();
+//			}
+//			if (_command == STEER || _command == ARC) {
+//				_param2 = dataIn.readFloat();
+//			}
+//			if (_command == MORSE) {
+//				_morseString = dataIn.readUTF();
+//			}
 		} catch (Exception e) {
 			System.out.println("Exception in receiving parameters!");
 		}
